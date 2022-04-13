@@ -1,0 +1,23 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: custom-build-server
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Bootstrap
+        steps:
+          - task: Docker@2
+            displayName: "Create initial custom build server image"
+            inputs:
+              command: buildAndPush
+              repository: $(repository)
+              Dockerfile: Dockerfile
+              containerRegistry: $(container-registry)
+              tags: |
+                $(custom-build-server-start-tag)
